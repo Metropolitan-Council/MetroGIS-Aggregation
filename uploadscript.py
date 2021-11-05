@@ -1,8 +1,8 @@
 # ---------------------------------------------------------------------------
-# Name: ap_upload.py
+# Name: uploadscript.py
 # Created: 2015-10-20
 # Updated: 2018-5-15
-# Updated Again: 2021-10-28
+# Updated Again: 2021-10-29
 # ---------------------------------------------------------------------------
 
 # Import modules
@@ -16,43 +16,49 @@ from arcgis.gis import Item
 #from urllib3.exceptions import InsecureRequestWarning #added
 import keyring
 import getpass
-#import urllib3
+import configparser
 
-
-#Get Parameters
-county = sys.argv[1]
-if county == "#":
-    county = "Hennepin"
-dataset = sys.argv[2]
-if dataset == "#":
-    dataset = "AddressPoints"
-wd = sys.argv[3]
-# Set working directory for Use in Tool
-workingDirectory = os.path.dirname(os.path.realpath(sys.argv[3]))
-if wd == "#":
-    #----Set working directory when incorporating in script or running from Python-----#
-    workingDirectory = "K:\\data_devel\\{}\\1_Data_Collection\\{}-county".format(dataset,county)
+#Get Dataset Parameter
+#ADDRESSPOINTS, PARCELS, CENTERLINES
+try:
+    dataset = sys.argv[1]
+except KeyError:
+    dataset = "DEFAULT"
+if dataset == "ADDRESSPOINTS":
+    pass
+elif dataset == "PARCELS":
+    pass
+elif dataset == "CENTERLINES":
+    pass
 else:
-    workingDirectory = os.path.dirname(os.path.realpath(wd))
-    
+    print("dataset={}".format(dataset))
+    print("first and only parameter must be one of ADDRESSPOINTS, PARCELS, CENTERLINES")
+    exit()
+
+# open config file for other parameters
+config = configparser.ConfigParser()
+config.read('config.ini')
 # Open log file
-logFile = workingDirectory + "\\upload.log"
+logFile = config[dataset]['logfile']
 report = open(logFile,'w')
+#Look for key errors
+portalurl = config[dataset]['portalurl']
+uploadFilePath = config[dataset]['uploadfile']
+username = config[dataset]['User']
 
-
-# Get timestamp
 timestamp = time.strftime("%c")
 report.write("Running script at " + timestamp + "\n")
-report.write("{}, {}\n".format(county, dataset))
-
+# Log parameters
+report.write("Dataset {}\n".format(dataset))
+report.write("Uploading: {}\n".format(uploadFilePath))
+report.write("Uploading to: {}\n".format(portalurl))
+report.write("User: {}\n".format(username))
 
 # Set local variables
 ### ArcGIS Portal Upload Variables ###
-portalurl = "https://arcgis.metc.state.mn.us/portal"
 report.write("{}\n".format(sys.executable))
 report.write("{}\n".format(sys.version))
 ### Username and password
-username = "testtemp"
 pwd = keyring.get_password("MetroGISFileUpload", username)
 if not pwd:
     report.write("password not set yet")
@@ -62,16 +68,11 @@ if not pwd:
 portal = GIS(portalurl, username, pwd)
 me = portal.users.me
 
-### UPLOAD VARIABLES ###
-if dataset == "AddressPoints":
-    uploadFilePath = workingDirectory + "\\adp.zip" # Path to local file that will be uploaded to update existing resource
-elif dataset == "parcels":
-    uploadFilePath = workingDirectory + "\\parcel.zip" # Path to local file that will be uploaded to update existing resource
 #Check if uploadFilePath exists
 
 #### Begin Upload to Met Council ArcGIS Portal ####
-title = "{} County {}".format(county, dataset)
-tags = "metrogis, {}, {}, test, delete"
+title = "County {}".format(dataset)
+tags = "metrogis, {}, {}, test, delete".format(dataset)
 item_properties = {"type": "File Geodatabase",
                     "title": title,
                     "tags":tags,
@@ -93,3 +94,6 @@ else:
 report.write("\n" + "Script completed\n----------------------------------")
 report.close()
 sys.exit()
+
+
+
