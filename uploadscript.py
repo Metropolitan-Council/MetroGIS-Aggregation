@@ -20,6 +20,12 @@ import getpass
 import configparser
 import logging
 
+# open config file for other parameters
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+
+
 #Get Dataset Parameter
 #ADDRESSPOINTS, PARCELS, CENTERLINES
 try:
@@ -39,10 +45,6 @@ else:
     print("first and only parameter must be one of ADDRESSPOINTS, PARCELS, CENTERLINES, PARKS")
     exit()
 
-# open config file for other parameters
-config = configparser.ConfigParser()
-config.read('config.ini')
-
 # Open log file
 logFile = config[dataset]['logfile']
 logLevel = int(config[dataset]['loglevel'])
@@ -58,6 +60,8 @@ fh.setFormatter(formatter)
 ch.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(ch)
+
+
 
 #Look for key errors
 portalurl = config[dataset]['portalurl']
