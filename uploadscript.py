@@ -1,8 +1,5 @@
 # ---------------------------------------------------------------------------
 # Name: uploadscript.py
-# Created: 2015-10-20
-# Updated: 2018-5-15
-# Updated Again: 2021-10-29
 # ---------------------------------------------------------------------------
 
 # Import modules
@@ -35,6 +32,7 @@ logger = logging.getLogger("MetroGISDataPublish")
 fh = logging.FileHandler(logFile)
 ch = logging.StreamHandler()
 def init(dataset):
+    '''Run once per session to setup parameters for upload'''
     # Open log file
     logLevel = int(config[dataset]['loglevel'])
     logger.setLevel(logLevel)
@@ -87,6 +85,7 @@ def validatedataset(dataset):
 
 #### Begin Upload to Met Council ArcGIS Portal ####
 def uploaddataset(dataset):
+    '''Upload Dataset to Portal'''
     dataset = validatedataset(dataset)
     init(dataset)
     uploadFilePath = this.uploadFilePath
