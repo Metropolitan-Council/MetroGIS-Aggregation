@@ -27,7 +27,7 @@ python.exe uploadscript.py ADDRESSPOINTS
 ~~~
 
 The script will challenge for the password of the user identified in the user parameter of the config.ini (see step 1)
-The script will store the username and password in the local system credential manager for future unattended/scheduled execution
+The script will use the local system credential manager for future unattended/scheduled execution
 
 ### 3) Set up scheduled task
 The script can be run Non-interactively
