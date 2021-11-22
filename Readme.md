@@ -26,8 +26,8 @@ e.g.
 python.exe uploadscript.py ADDRESSPOINTS
 ~~~
 
-The script will challenge for the password of the user identified in the user parameter of the config.ini (see step 1) \
-The script will use the local system credential manager for future unattended/scheduled execution. \
+The script will challenge for the password of the user identified in the user parameter of the config.ini (see step 1)\
+The script will use the local system credential manager for future unattended/scheduled execution.\
 When Portal password changes, remember to either change the password in the credential manager, or remove the entry entirely and run interactively.
 
 ### 3) Set up scheduled task
