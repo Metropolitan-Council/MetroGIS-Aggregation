@@ -124,7 +124,7 @@ def uploaddataset(dataset):
         # Log full response
         logger.debug("new itemid: {}".format(rslt.id))
         config[dataset]['itemid']=rslt.id
-        with open('config.ini', 'w') as configfile:
+        with open(configPath, 'w') as configfile:
             config.write(configfile)
         logger.debug("added itemid to config file under {}".format(dataset))
         logger.info("Uploaded item: {}".format(rslt.homepage))
