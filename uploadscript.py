@@ -69,8 +69,22 @@ def init(dataset):
         p = getpass.getpass()
         pwd = keyring.set_password("MetroGISFileUpload", username, p)
         logger.info("password saved in keyring")
+    try:
+        this.portal = GIS(portalurl, username, pwd)
+        return True
+    except Exception as e:
+        logger.info(e.args[0])
+        p = getpass.getpass()
+        try:
+            this.portal = GIS(portalurl, username, p)
+            pwd = keyring.set_password("MetroGISFileUpload", username, p)
+            logger.info("new password saved in keyring")
+            return True
+        except Exception as e:
+            logger.warning(e.args[0])
+            return False
         
-    this.portal = GIS(portalurl, username, pwd)
+
 
 def validatedataset(dataset):
     ds = dataset.upper()
@@ -87,59 +101,61 @@ def validatedataset(dataset):
 def uploaddataset(dataset):
     '''Upload Dataset to Portal'''
     dataset = validatedataset(dataset)
-    init(dataset)
-    uploadFilePath = this.uploadFilePath
-    portal = this.portal
-    #Set up metadata for item
-    title = "{}".format(dataset)
-    tags = "metrogis, {}, test, delete".format(dataset)
-    item_properties = {"type": "File Geodatabase",
-                    "title": title,
-                    "tags":tags,
-                    "snippet":"testing upload of zipped file gdb",
-                    "description":"Started with a small file geodatabase. This is a large sized zip file. Eventually testing a large upload and automating it.",
-                  "commentsEnabled" : False,
-                  "overwrite":True
-                  }
-    
-    path = Path(uploadFilePath)
-    if path.is_file():
-        try:
-            rslt = portal.content.add(item_properties, data=uploadFilePath)
+    if init(dataset):
+        uploadFilePath = this.uploadFilePath
+        portal = this.portal
+        #Set up metadata for item
+        title = "{}".format(dataset)
+        tags = "metrogis, {}, test, delete".format(dataset)
+        item_properties = {"type": "File Geodatabase",
+                        "title": title,
+                        "tags":tags,
+                        "snippet":"testing upload of zipped file gdb",
+                        "description":"Started with a small file geodatabase. This is a large sized zip file. Eventually testing a large upload and automating it.",
+                    "commentsEnabled" : False,
+                    "overwrite":True
+                    }
         
-        except Exception as e:
-            logger.info("{} Upload {} failed".format(dataset, uploadFilePath))
-            logger.info("{}".format(e))
-            #If error code 409. Need to get item and update
-            #update(file, folder_name=None, file_name=None, text=None)
-            #rslt = portal.content.update(item_properties, data=uploadFilePath)
-            rslt=None
-    else:
-        if uploadFilePath == '':
-            logger.warning("uploadFilePath: {} is empty".format(uploadFilePath))
+        path = Path(uploadFilePath)
+        if path.is_file():
+            try:
+                rslt = portal.content.add(item_properties, data=uploadFilePath)
+            
+            except Exception as e:
+                logger.info("{} Upload {} failed".format(dataset, uploadFilePath))
+                logger.info("{}".format(e))
+                #If error code 409. Need to get item and update
+                #update(file, folder_name=None, file_name=None, text=None)
+                #rslt = portal.content.update(item_properties, data=uploadFilePath)
+                rslt=None
         else:
-            logger.warning("uploadFilePath: {} does not point to a file".format(uploadFilePath))
-        rslt = None
-    if rslt:
-        # Log full response
-        logger.debug("new itemid: {}".format(rslt.id))
-        config[dataset]['itemid']=rslt.id
-        with open(configPath, 'w') as configfile:
-            config.write(configfile)
-        logger.debug("added itemid to config file under {}".format(dataset))
-        logger.info("Uploaded item: {}".format(rslt.homepage))
-    else:
-        #try getting item with id and updating item https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#arcgis.gis.Item.update
-        try:
-            itemid = config[dataset]['itemid']
+            if uploadFilePath == '':
+                logger.warning("uploadFilePath: {} is empty".format(uploadFilePath))
+            else:
+                logger.warning("uploadFilePath: {} does not point to a file".format(uploadFilePath))
+            rslt = None
+        if rslt:
+            # Log full response
+            logger.debug("new itemid: {}".format(rslt.id))
+            config[dataset]['itemid']=rslt.id
+            with open(configPath, 'w') as configfile:
+                config.write(configfile)
+            logger.debug("added itemid to config file under {}".format(dataset))
+            logger.info("Uploaded item: {}".format(rslt.homepage))
+        else:
+            #try getting item with id and updating item https://developers.arcgis.com/python/api-reference/arcgis.gis.toc.html#arcgis.gis.Item.update
+            try:
+                itemid = config[dataset]['itemid']
 
-            updateitem = portal.content.get(itemid)
-            updateitem.update(data=uploadFilePath)
-        except KeyError:
-            logger.critical("No Item ID in config file. {} upload unsuccessful!".format(dataset))
-        except Exception as e:
-            logger.critical("{} upload unsuccessful!".format(dataset))
-            logger.warning("{}".format(e))
+                updateitem = portal.content.get(itemid)
+                updateitem.update(data=uploadFilePath)
+            except KeyError:
+                logger.critical("No Item ID in config file. {} upload unsuccessful!".format(dataset))
+            except Exception as e:
+                logger.critical("{} upload unsuccessful!".format(dataset))
+                logger.warning("{}".format(e))
+    else:
+        logger.critical("Could not log into Met Council Portal\n")
     #### END UPLOAD TO Met Council ArcGIS PORTAL ####
 
     # Close log and exit
