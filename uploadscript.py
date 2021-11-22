@@ -23,8 +23,8 @@ this.uploadFilePath = None
 this.portal = None
 # open config file for other parameters
 config = configparser.ConfigParser()
-
-config.read('config.ini')
+configPath = os.path.join (Path(__file__).parent, 'config.ini')
+config.read(configPath)
 
 # create logger object
 logFile = config["DEFAULT"]['logfile']
