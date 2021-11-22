@@ -1,5 +1,5 @@
 # MetroGIS Upload
-Upload Count datasets to be aggegated into MetroGIS Regional Datasets
+Upload County datasets to be aggegated into MetroGIS Regional Datasets
 
 ## Requirements
 Python 3.x\
