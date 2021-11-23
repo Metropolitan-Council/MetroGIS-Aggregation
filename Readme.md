@@ -24,7 +24,7 @@ Run the python code with one parameter - *datastsetname* \
 As mentioned above, the script requires a Python module installed with ArcGIS Pro. On a windows machine with a standard ArcGIS Pro installation, one way to run the script would be from the "Python Command Prompt" found in the Windows Start Menu under the ArcGIS Folder.\ 
 Assuming you saved the code and config file in c:\scripts\MetroGIS, it would look something like this:\
 ~~~
-(arcgispro-py3-clone) C:\Users\*username*\AppData\Local\ESRI\conda\envs\arcgispro-py3>python.exe C:\scripts\MetroGIS\uploadscript.py ADDRESSPOINTS
+(arcgispro-py3) C:\Program Files\ArcGIS\Pro\bin\Python\envs\arcgispro-py3>python.exe C:\scripts\MetroGIS\uploadscript.py ADDRESSPOINTS
 ~~~
 
 The script will challenge for the password of the user identified in the user parameter of the config.ini (see step 1)\
