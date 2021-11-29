@@ -29,10 +29,10 @@ Assuming you saved the code and config file in c:\scripts\MetroGIS, it would loo
 ~~~
 
 The script will challenge for the password of the user identified in the user parameter of the config.ini (see step 1)\
-The script will use the local system credential manager for future unattended/scheduled execution.\
+The script will use the local system credential manager for future unattended/scheduled execution.
 
 
 ### 3) Set up scheduled task
 The script can now be run non-interactively/automated. See this esri blog post for more info on setting up python scripts to run on a schedule. https://www.esri.com/arcgis-blog/products/arcgis-pro/analytics/schedule-a-python-script-or-model-to-run-at-a-prescribed-time-2019-update/
 
-When Portal password changes, remember to either change the password in the credential manager, or remove the entry entirely and run again interactively.
+When Portal password changes, remember to either change the password in the credential manager, or remove the entry entirely go back to step 2.
