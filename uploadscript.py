@@ -122,8 +122,9 @@ def uploaddataset(dataset):
                 rslt = portal.content.add(item_properties, data=uploadFilePath)
             
             except Exception as e:
-                logger.info("{} Upload {} failed".format(dataset, uploadFilePath))
-                logger.info("{}".format(e))
+                logger.info("Could not overwrite {} with just name".format(dataset))
+                logger.debug("{}".format(e))
+                logger.info("Will try itemid for overwrite")
                 #If error code 409. Need to get item and update
                 #update(file, folder_name=None, file_name=None, text=None)
                 #rslt = portal.content.update(item_properties, data=uploadFilePath)
