@@ -1,11 +1,11 @@
 # MetroGIS Upload
-Upload County datasets to be aggegated into MetroGIS Regional Datasets
+Upload County datasets to be aggegated into MetroGIS Regional Datasets. This is intended for a small community of [MetroGIS](https://metrogis.org/) participants
+
 
 ## Requirements
 * Python 3.x
 * ArcGIS Pro - "arcgis" Python module requires running on a client with ArcGIS Pro
 
-All other python modules are standard
 
 ## Instructions
 ### 1) Edit config.ini file
