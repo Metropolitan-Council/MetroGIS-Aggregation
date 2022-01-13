@@ -105,13 +105,16 @@ def uploaddataset(dataset):
         uploadFilePath = this.uploadFilePath
         portal = this.portal
         #Set up metadata for item
-        title = "{}".format(dataset)
-        tags = "metrogis, {}, test, delete".format(dataset)
+        title = config[dataset]['title']
+        county = config["DEFAULT"]['county']
+        tags = "MetroGIS, {}, {}, {}, {} County".format(dataset,title,county,county)
+        snippet = "MetroGIS {} Upload for {} County".format(title,county)
+        description = "This zipped file geodatabase contains {} for {} County as part of the MetroGIS aggregation and validation initiative facilitated by the Metropolitan Council. The Portal Item will be downloaded through nightly automations and validation errors sent to corresponding county if needed.".format(title,county)
         item_properties = {"type": "File Geodatabase",
                         "title": title,
                         "tags":tags,
-                        "snippet":"testing upload of zipped file gdb",
-                        "description":"Started with a small file geodatabase. This is a large sized zip file. Eventually testing a large upload and automating it.",
+                        "snippet":snippet,
+                        "description":description,
                     "commentsEnabled" : False,
                     "overwrite":True
                     }
