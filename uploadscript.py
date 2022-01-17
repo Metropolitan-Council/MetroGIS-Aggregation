@@ -118,6 +118,7 @@ def uploaddataset(dataset):
                     "commentsEnabled" : False,
                     "overwrite":True
                     }
+        logger.debug(item_properties)
         
         path = Path(uploadFilePath)
         if path.is_file():
@@ -152,7 +153,8 @@ def uploaddataset(dataset):
                 itemid = config[dataset]['itemid']
 
                 updateitem = portal.content.get(itemid)
-                updateitem.update(data=uploadFilePath)
+                updateitem.update(item_properties, data=uploadFilePath)
+                logger.info("{} has been updated in Portal.".format(title))
             except KeyError:
                 logger.critical("No Item ID in config file. {} upload unsuccessful!".format(dataset))
             except Exception as e:
