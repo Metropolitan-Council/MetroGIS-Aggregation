@@ -13,6 +13,7 @@ Upload County datasets to be aggegated into MetroGIS Regional Datasets. This is 
 * logfile - your choice on the your local file system for where the log file should go
 * user - username assigned from the Met Council
 * loglevel - How verbose do you want the log file?
+* county - type the county submitting data (e.g. Dakota, Washington, etc) sans "County" suffix
 
 #### Add the location of zip file of each dataset to be uploaded under the section for that dataset
 e.g.
